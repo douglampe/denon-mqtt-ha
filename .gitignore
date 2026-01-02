@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.env
+coverage/
+media_player.yaml
+receivers.json
+receivers-discovered.json

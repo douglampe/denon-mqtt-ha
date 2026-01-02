@@ -1,0 +1,42 @@
+version: '2'
+services:
+  eclipse-mosquitto:
+    container_name: mosquitto
+    image: eclipse-mosquitto:latest
+    restart: always
+    ports:
+      - 9001:9001
+      - 1883:1883
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./mosquitto-users.txt:/mosquitto/config/mosquitto-users.txt
+      - mosquitto-data:/mosquitto/data
+  homeassistant:
+    container_name: home-assistant
+    image: homeassistant/home-assistant:stable
+    volumes:
+      - ./ha-config:/config
+    devices:
+      - "/dev/ttyUSB0:/dev/ttyUSB0"
+    environment:
+      - TZ=America/New_York
+    restart: always
+    privileged: true
+    group_add:
+      - dialout
+    ports:
+      - "8123:8123"
+      - "80:80"
+      - "8300:8300"
+      - "51827:51827"
+  denon-mqtt:
+    container_name: denon-mqtt
+    image: douglampe/denon-mqtt:latest
+    network_mode: host
+    volumes:
+      - /home/pi/denon-mqtt/receivers.json:/app/receivers.json
+    command: node bin/denon-mqtt-cli.js -f receivers.json -m localhost
+
+volumes:
+  mosquitto-data:
+    driver: local

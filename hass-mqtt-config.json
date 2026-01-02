@@ -1,0 +1,68 @@
+{
+  "switches": [
+    {
+      "name": "Power",
+      "id": "power",
+      "setting": "Power",
+      "entity": {
+        "command_template": "{ \"power\": { \"text\": \"{{ value }}\" } }",
+        "value_template": "{{ value_json.power }}"
+      }
+    },
+    {
+      "name": "Mute",
+      "id": "mute",
+      "setting": "Mute",
+      "entity": {
+        "command_template": "{ \"mute\": { \"text\": \"{{ value }}\" } }",
+        "value_template": "{{ value_json.mute }}"
+      }
+    },
+    {
+      "name": "Mute Toggle",
+      "id": "mute_toggle",
+      "entity": {
+      }
+    },
+    {
+      "name": "Volume Up/Down",
+      "id": "volume_up_down",
+      "entity": {
+        "command_template": "{ \"volume\": { \"text\": \"{{ value }}\" } }",
+        "value_template": "{{ value_json.volume }}"
+      }
+    }
+  ],
+  "sensors": [
+    {
+      "name": "Volume Percent",
+      "id": "volume_percent",
+      "setting": "Volume",
+      "entity": {
+        "command_template": "{{ (value_json.volume | float)*0.01 }}"
+      }
+    }
+  ],
+  "fans": [
+    {
+      "name": "Volume",
+      "id": "volume",
+      "entity": {
+        "command_template": "{ \"volume\": { \"numeric\": \"{{ value }}\" } }",
+        "percentage_command_template": "{ \"volume\": { \"numeric\": {{ value }} } }",
+        "speed_range_min": "1",
+        "speed_range_max": "99"
+      }
+    }
+  ],
+  "selects": [
+    {
+      "name": "Source",
+      "id": "source",
+      "setting": "Source",
+      "entity": {
+        "command_template": "{ \"source\": { \"text\": \"{{ value }}\" } }"
+      }
+    }
+  ]
+}

@@ -146,14 +146,14 @@ export class MqttHassPublisher {
       name: `${deviceName} ${config.name}`,
       p: type,
       unique_id: id,
-      default_entity_id: id,
+      default_entity_id: `${type}.${id}`,
     };
   }
 
   async appendMediaPlayerConfig(name: string, id: string) {
     fs.appendFile(this.hass.configFile, `  - platform: universal
     name: ${name} Audio
-    default_entity_id: ${id}_media_player
+    default_entity_id: media_player.${id}_media_player
     unique_id: ${id}_media_player
     commands:
       turn_on:

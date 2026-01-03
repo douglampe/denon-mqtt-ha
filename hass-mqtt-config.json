@@ -3,33 +3,25 @@
     {
       "name": "Power",
       "id": "power",
-      "setting": "Power",
       "entity": {
         "command_template": "{ \"power\": { \"text\": \"{{ value }}\" } }",
-        "value_template": "{{ value_json.power if value_json.power is defined else this.state }}"
+        "value_template": "{{ value_json.state.power if value_json.state.power is defined else this.state }}"
       }
     },
     {
       "name": "Mute",
       "id": "mute",
-      "setting": "Mute",
       "entity": {
         "command_template": "{ \"mute\": { \"text\": \"{{ value }}\" } }",
-        "value_template": "{{ value_json.mute if value_json.mute is defined else this.state }}"
+        "value_template": "{{ value_json.state.mute if value_json.state.mute is defined else this.state }}"
       }
-    },
+    }
+  ],
+  "buttons": [
     {
       "name": "Mute Toggle",
       "id": "mute_toggle",
       "entity": {
-      }
-    },
-    {
-      "name": "Volume Up/Down",
-      "id": "volume_up_down",
-      "entity": {
-        "command_template": "{ \"volume\": { \"text\": \"{{ value }}\" } }",
-        "value_template": "{{ value_json.volume if value_json.volume is defined else this.state }}"
       }
     }
   ],
@@ -37,9 +29,8 @@
     {
       "name": "Volume Percent",
       "id": "volume_percent",
-      "setting": "Volume",
       "entity": {
-        "command_template": "{{ (value_json.volume | float)*0.01 if value_json.volume is defined else this.state }}"
+        "value_template": "{{ (value_json.state.volume | float)*0.01 if value_json.state.volume is defined else this.state }}"
       }
     }
   ],
@@ -50,7 +41,8 @@
       "entity": {
         "command_template": "{ \"volume\": { \"numeric\": \"{{ value }}\" } }",
         "percentage_command_template": "{ \"volume\": { \"numeric\": {{ value }} } }",
-        "percentage_value_template": "{{ value_json.volume if value_json.volume is defined else this.state }}",
+        "percentage_value_template": "{{ value_json.state.volume if value_json.state.volume is defined else this.state }}",
+        "state_value_template": "{{ value_json.state.power if value_json.state.power is defined else this.state }}",
         "speed_range_min": "1",
         "speed_range_max": "99"
       }
@@ -60,10 +52,9 @@
     {
       "name": "Source",
       "id": "source",
-      "setting": "Source",
       "entity": {
         "command_template": "{ \"source\": { \"text\": \"{{ value }}\" } }",
-        "value_template": "{{ value_json.source if value_json.source is defined else this.state }}"
+        "value_template": "{{ value_json.state.source if value_json.state.source is defined else this.state }}"
       }
     }
   ]

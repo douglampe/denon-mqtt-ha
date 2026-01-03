@@ -26,12 +26,12 @@ export interface MqttManagerOptions {
 export interface EntityConfig {
   name: string;
   id: string;
-  setting: string;
   entity: Record<string, string | string[]>;
 }
 
 export interface EntitiesConfig {
   switches: EntityConfig[];
+  buttons: EntityConfig[];
   sensors: EntityConfig[];
   fans: EntityConfig[];
   selects: EntityConfig[];
@@ -64,6 +64,8 @@ export class MqttHassPublisher {
     });
 
     const managers: MqttHassPublisher[] = [];
+
+    await fs.writeFile(hass.configFile, '');
 
     for await (const receiver of receivers) {
       managers.push(MqttHassPublisher.create({ receiver, mqtt, hass, client }));
@@ -107,6 +109,9 @@ export class MqttHassPublisher {
       for (const entity of entityConfig.switches) {
         this.addEntityConfig(payload.cmps, 'switch', zoneIndex, entity, deviceName);
       }
+      for (const entity of entityConfig.buttons) {
+        this.addEntityConfig(payload.cmps, 'button', zoneIndex, entity, deviceName);
+      }
       for (const entity of entityConfig.sensors) {
         this.addEntityConfig(payload.cmps, 'sensor', zoneIndex, entity, deviceName);
       }
@@ -125,7 +130,7 @@ export class MqttHassPublisher {
 
       console.debug(`Writing Media Player configuration for ${deviceName}`);
 
-      await this.appendMediaPlayerConfig(deviceName, deviceId);
+      await this.appendMediaPlayerConfig(deviceName, deviceId, zoneId);
     }
   }
 
@@ -135,10 +140,11 @@ export class MqttHassPublisher {
 
     if (type === 'fan') {
       config.entity['percentage_command_topic'] = `${this.mqtt.prefix}/${this.receiver.id}/${zoneId}/command`;
+      config.entity['percentage_state_topic'] = `${this.mqtt.prefix}/${this.receiver.id}/${zoneId}/state`;
     } else if (type === 'select') {
       config.entity['options'] = this.receiver.zones[zone - 1].sources;
     } else if (config.id === 'mute_toggle') {
-      config.entity['command_template'] = `"{% if is_state('switch.${id}', 'off') %} { \"text\": \"ON\" } {% else %} { \"text\": \"OFF\" } {% endif %}`;
+      config.entity['command_template'] = `{ \"mute\": { \"text\": {% if is_state('switch.${this.receiver.id}_${zoneId}_mute', 'off') %}\"ON\"{% else %}\"OFF\"{% endif %} } }`;
     }
 
     cmps[id] = {
@@ -150,7 +156,7 @@ export class MqttHassPublisher {
     };
   }
 
-  async appendMediaPlayerConfig(name: string, id: string) {
+  async appendMediaPlayerConfig(name: string, id: string, zone: string) {
     fs.appendFile(this.hass.configFile, `  - platform: universal
     name: ${name} Audio
     default_entity_id: media_player.${id}_media_player
@@ -165,23 +171,23 @@ export class MqttHassPublisher {
         target:
           entity_id: switch.${id}_power
       volume_up:
-        action: switch.turn_on
+        action: button.press
         target:
-          entity_id: switch.${id}_volume_up_down
+          entity_id: button.${id}_volume_up
       volume_down:
-        action: switch.turn_off
+        action: button.press
         target:
-          entity_id: switch.${id}_volume_up_down
+          entity_id: button.${id}_volume_down
       volume_mute:
-        action: switch.turn_on
+        action: button.press
         target:
-          entity_id: switch.${id}_mute_toggle
+          entity_id: button.${id}_mute_toggle
       volume_set:
-        action: fan.set_percentage
-        target:
-          entity_id: fan.${id}_volume
+        action: mqtt.publish
         data:
-          percentage: "{{ (volume_level | float)*100 }}"
+          topic: denon/${id}/${zone}/command
+          payload: "{ \\"volume\\": {{ (volume_level | float)*0.01 }} }"
+
     attributes:
       state: switch.${id}_power
       is_volume_muted: switch.${id}_mute

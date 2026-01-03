@@ -9,6 +9,7 @@ jest.mock('mqtt', () => {
 });
 
 describe('MqttHassPublisher', () => {
+  (jest.spyOn(fs, 'writeFile') as any).mockImplementation(() => {});
   (jest.spyOn(fs, 'appendFile') as any).mockImplementation(() => {});
   describe('start()', () => {
     it('should call publish for each receiver', async () => {
@@ -146,7 +147,7 @@ describe('MqttHassPublisher', () => {
       });
       const mockAppendFile = jest.spyOn(fs, 'appendFile');
 
-      await publisher.appendMediaPlayerConfig('My AVR Main Zone', "my_avr_main_zone");
+      await publisher.appendMediaPlayerConfig('My AVR Main Zone', "my_avr_main_zone", "main_zone");
 
       expect(mockAppendFile).toHaveBeenCalled();
     });

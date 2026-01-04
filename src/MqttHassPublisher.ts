@@ -183,10 +183,11 @@ export class MqttHassPublisher {
         target:
           entity_id: button.${id}_mute_toggle
       volume_set:
-        action: mqtt.publish
+        action: fan.set_percentage
+        target:
+          entity_id: fan.${id}_volume
         data:
-          topic: denon/${id}/${zone}/command
-          payload: "{ \\"volume\\": {{ (volume_level | float)*0.01 }} }"
+          percentage: "{{ (volume_level | float)*100 }}"
 
     attributes:
       state: switch.${id}_power

@@ -4,11 +4,10 @@
   "description": "MQTT Home Assistant configuration companion for denon-mqtt interface for Denon receivers",
   "main": "dist/entryPoint.js",
   "bin": {
-    "denon-mqtt": "dist/entryPoint.js"
+    "denon-mqtt-ha": "dist/entryPoint.js"
   },
   "scripts": {
     "build": "rimraf dist && tsc --project tsconfig.json",
-    "start": "node bin/denon-mqtt-cli.js -f receivers.json -m mosquitto",
     "dev": "ts-node src/entryPoint.ts",
     "lint": "eslint src --fix --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",

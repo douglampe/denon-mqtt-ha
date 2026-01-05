@@ -101,6 +101,11 @@ export class MqttHassPublisher {
         o: {
           name: 'denon-mqtt-ha',
         },
+        availability: {
+            topic: `${this.mqtt.prefix}/${this.receiver.id}/main_zone/state`,
+            value_template: '{{ value_json.state.main_power if value_json.state.main_power is defined else this.state }}',
+            payload_available: 'ON',
+        },
         cmps: {} as Record<string, Record<string, string>>,
         state_topic: `${this.mqtt.prefix}/${this.receiver.id}/${zoneId}/state`,
         command_topic: `${this.mqtt.prefix}/${this.receiver.id}/${zoneId}/command`,
@@ -145,6 +150,8 @@ export class MqttHassPublisher {
       config.entity['options'] = this.receiver.zones[zone - 1].sources;
     } else if (config.id === 'mute_toggle') {
       config.entity['command_template'] = `{ \"mute\": { \"text\": {% if is_state('switch.${this.receiver.id}_${zoneId}_mute', 'off') %}\"ON\"{% else %}\"OFF\"{% endif %} } }`;
+    } else if (config.id === 'refresh') {
+      config.entity['press_payload'] = 'REFRESH';
     }
 
     cmps[id] = {

@@ -137,7 +137,7 @@ export class MqttHassPublisher {
 
       console.debug(`Writing Media Player configuration for ${deviceName}`);
 
-      await this.appendMediaPlayerConfig(deviceName, deviceId, zoneId);
+      await this.appendMediaPlayerConfig(compName, deviceId, zoneId);
     }
   }
 

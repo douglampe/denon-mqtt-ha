@@ -29,7 +29,8 @@ export class CliParser {
       .option('-p, --password <password>', 'MQTT password', process.env.DMQTT_PASSWORD ?? 'password')
       .option('--port', 'MQTT port <port>', process.env.DMQTT_PORT ?? '1883')
       .option('--prefix', 'MQTT topic prefix <prefix>', process.env.DMQTT_PREFIX ?? 'denon')
-      .option('-h --hass', 'Home Assistant discovery topic Prefix <prefix>', process.env.DMQTT_HASS_PREFIX ?? 'homeassistant')
+      .option('--short-names', 'Use only zone names for entities')
+      .option('-h --hass', 'Home Assistant discovery topic Prefix <hass>', process.env.DMQTT_HASS_PREFIX ?? 'homeassistant')
       .option('-o --output', 'Home Assistant Media Player config file <output>', process.env.DMQTT_HASS_OUTPUT ?? 'media_player.yaml')
       .action(CliParser.start);
 
@@ -70,6 +71,7 @@ export class CliParser {
       {
         prefix: opts.hass,
         configFile: opts.output,
+        shortNames: opts.shortNames,
       },
     );
   }

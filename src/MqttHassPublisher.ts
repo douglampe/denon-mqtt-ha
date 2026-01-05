@@ -14,6 +14,7 @@ export interface MqttConfig {
 export interface HomeAssistantConfig {
   prefix: string;
   configFile: string;
+  shortNames: boolean;
 }
 
 export interface MqttManagerOptions {
@@ -92,6 +93,7 @@ export class MqttHassPublisher {
       const zoneId = MqttHassPublisher.getZoneId(zoneIndex);
       const deviceId = `${this.receiver.id}_${zoneId}`;
       const deviceName = `${this.receiver.name} ${zone.name}`;
+      const compName = this.hass.shortNames ? zone.name : `${this.receiver.name} ${zone.name}`;
 
       const payload = {
         dev: {
@@ -112,19 +114,19 @@ export class MqttHassPublisher {
       };
 
       for (const entity of entityConfig.switches) {
-        this.addEntityConfig(payload.cmps, 'switch', zoneIndex, entity, deviceName);
+        this.addEntityConfig(payload.cmps, 'switch', zoneIndex, entity, compName);
       }
       for (const entity of entityConfig.buttons) {
-        this.addEntityConfig(payload.cmps, 'button', zoneIndex, entity, deviceName);
+        this.addEntityConfig(payload.cmps, 'button', zoneIndex, entity, compName);
       }
       for (const entity of entityConfig.sensors) {
-        this.addEntityConfig(payload.cmps, 'sensor', zoneIndex, entity, deviceName);
+        this.addEntityConfig(payload.cmps, 'sensor', zoneIndex, entity, compName);
       }
       for (const entity of entityConfig.fans) {
-        this.addEntityConfig(payload.cmps, 'fan', zoneIndex, entity, deviceName);
+        this.addEntityConfig(payload.cmps, 'fan', zoneIndex, entity, compName);
       }
       for (const entity of entityConfig.selects) {
-        this.addEntityConfig(payload.cmps, 'select', zoneIndex, entity, deviceName);
+        this.addEntityConfig(payload.cmps, 'select', zoneIndex, entity, compName);
       }
 
       const topic = `${this.hass.prefix}/device/${deviceId}/config`;

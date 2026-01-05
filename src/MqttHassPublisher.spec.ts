@@ -50,6 +50,7 @@ describe('MqttHassPublisher', () => {
         {
           prefix: 'homeassistant',
           configFile: 'media_player.yaml',
+          shortNames: false,
         },
       );
       expect(mockPublish).toHaveBeenCalledTimes(2);
@@ -87,6 +88,7 @@ describe('MqttHassPublisher', () => {
         hass: {
           prefix: 'homeassistant',
           configFile: 'media_player.yaml',
+          shortNames: false,
         },
         client,
       });
@@ -142,6 +144,7 @@ describe('MqttHassPublisher', () => {
         hass: {
           prefix: 'homeassistant',
           configFile: 'media_player.yaml',
+          shortNames: false,
         },
         client,
       });

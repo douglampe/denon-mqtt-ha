@@ -34,7 +34,8 @@ Options:
   -p, --password <password>  MQTT password (default: "password")
   --port                     MQTT port <port>
   --prefix                   MQTT topic prefix <prefix>
-  -h --hass                  Home Assistant discovery topic Prefix <prefix>
+  --short-names              Use only zone names for entities
+  -h --hass                  Home Assistant discovery topic Prefix <hass>
   -o --output                Home Assistant Media Player config file <output>
   --help                     display help for command
 ```
@@ -50,8 +51,9 @@ the `name` value of the receiver config and `{zone}` is the `name` value of the 
 
 Entities are created as required to support the Universal Media Player. Each entity ID is `{device_id}_{entity_id}` 
 where `{device_id}` is the ID described above (ex: `home_theater_main_zone`) and `{entity_id}` is the ID listed below
-(ex: `home_theater_main_zone_power`). Entity names are `{device name} {entity name}` where `{device name}` is the name
-described above and `{entity name}` is the name listed below.
+(ex: `home_theater_main_zone_power`). Entity names are `{component name} {entity name}` where `{component name}` is the
+device name described above unless `--short-names` is specified in which case it is the zone name. The value for
+{entity name}` is the name listed below.
 
 |Type  |ID            |Name          |
 |------|--------------|--------------|

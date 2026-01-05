@@ -114,8 +114,8 @@ describe('MqttHassPublisher', () => {
   });
 
   describe('publishMediaPlayerConfig()', () => {
-    it('should write yaml file', async() => {
-       const mockPublish = jest.fn();
+    it('should write yaml file', async () => {
+      const mockPublish = jest.fn();
       (connectAsync as jest.Mock).mockResolvedValueOnce({
         publishAsync: mockPublish,
       });
@@ -150,9 +150,9 @@ describe('MqttHassPublisher', () => {
       });
       const mockAppendFile = jest.spyOn(fs, 'appendFile');
 
-      await publisher.appendMediaPlayerConfig('My AVR Main Zone', "my_avr_main_zone", "main_zone");
+      await publisher.appendMediaPlayerConfig('My AVR Main Zone', 'my_avr_main_zone', 'main_zone');
 
       expect(mockAppendFile).toHaveBeenCalled();
     });
-  })
+  });
 });

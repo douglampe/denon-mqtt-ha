@@ -104,9 +104,9 @@ export class MqttHassPublisher {
           name: 'denon-mqtt-ha',
         },
         availability: {
-            topic: `${this.mqtt.prefix}/${this.receiver.id}/main_zone/state`,
-            value_template: '{{ value_json.state.main_power if value_json.state.main_power is defined else this.state }}',
-            payload_available: 'ON',
+          topic: `${this.mqtt.prefix}/${this.receiver.id}/main_zone/state`,
+          value_template: '{{ value_json.state.main_power if value_json.state.main_power is defined else this.state }}',
+          payload_available: 'ON',
         },
         cmps: {} as Record<string, Record<string, string>>,
         state_topic: `${this.mqtt.prefix}/${this.receiver.id}/${zoneId}/state`,
@@ -132,12 +132,12 @@ export class MqttHassPublisher {
       const topic = `${this.hass.prefix}/device/${deviceId}/config`;
 
       console.debug(`Publishing discovery payload to topic ${topic} for device ${payload.dev.name}`);
-      
+
       await this.client.publishAsync(topic, JSON.stringify(payload));
 
       console.debug(`Writing Media Player configuration for ${deviceName}`);
 
-      await this.appendMediaPlayerConfig(deviceName, deviceId, zoneId);
+      await this.appendMediaPlayerConfig(compName, deviceId, zoneId);
     }
   }
 
@@ -151,7 +151,8 @@ export class MqttHassPublisher {
     } else if (type === 'select') {
       config.entity['options'] = this.receiver.zones[zone - 1].sources;
     } else if (config.id === 'mute_toggle') {
-      config.entity['command_template'] = `{ \"mute\": { \"text\": {% if is_state('switch.${this.receiver.id}_${zoneId}_mute', 'off') %}\"ON\"{% else %}\"OFF\"{% endif %} } }`;
+      config.entity['command_template'] =
+        `{ \"mute\": { \"text\": {% if is_state('switch.${this.receiver.id}_${zoneId}_mute', 'off') %}\"ON\"{% else %}\"OFF\"{% endif %} } }`;
     } else if (config.id === 'refresh') {
       config.entity['press_payload'] = 'REFRESH';
     }
@@ -166,7 +167,9 @@ export class MqttHassPublisher {
   }
 
   async appendMediaPlayerConfig(name: string, id: string, zone: string) {
-    fs.appendFile(this.hass.configFile, `  - platform: universal
+    fs.appendFile(
+      this.hass.configFile,
+      `  - platform: universal
     name: ${name} Audio
     default_entity_id: media_player.${id}_media_player
     unique_id: ${id}_media_player
@@ -203,7 +206,8 @@ export class MqttHassPublisher {
       is_volume_muted: switch.${id}_mute
       volume_level: sensor.${id}_volume_percent
       source_list: select.${id}_source|options
-      source: state.select.${id}_source.state\n`);
+      source: state.select.${id}_source.state\n`,
+    );
   }
 
   static getZoneId(zone: number) {

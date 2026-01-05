@@ -23,6 +23,13 @@
       "id": "mute_toggle",
       "entity": {
       }
+    },
+    {
+      "name": "Refresh",
+      "id": "refresh",
+      "entity": {
+        "payload_press": "{ \"refresh\": { \"text\": \"ON\" } }"
+      }
     }
   ],
   "sensors": [
@@ -31,6 +38,12 @@
       "id": "volume_percent",
       "entity": {
         "value_template": "{{ (value_json.state.volume | float)*0.01 if value_json.state.volume is defined else this.state }}"
+      }
+    },
+    {
+      "name": "State",
+      "id": "state",
+      "entity": {
       }
     }
   ],

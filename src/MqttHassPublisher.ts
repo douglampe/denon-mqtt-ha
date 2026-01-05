@@ -145,6 +145,8 @@ export class MqttHassPublisher {
       config.entity['options'] = this.receiver.zones[zone - 1].sources;
     } else if (config.id === 'mute_toggle') {
       config.entity['command_template'] = `{ \"mute\": { \"text\": {% if is_state('switch.${this.receiver.id}_${zoneId}_mute', 'off') %}\"ON\"{% else %}\"OFF\"{% endif %} } }`;
+    } else if (config.id === 'refresh') {
+      config.entity['press_payload'] = 'REFRESH';
     }
 
     cmps[id] = {

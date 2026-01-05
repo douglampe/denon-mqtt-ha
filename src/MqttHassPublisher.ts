@@ -101,6 +101,11 @@ export class MqttHassPublisher {
         o: {
           name: 'denon-mqtt-ha',
         },
+        availability: {
+            topic: `${this.mqtt.prefix}/${this.receiver.id}/main_zone/state`,
+            value_template: '{{ value_json.state.main_power if value_json.state.main_power is defined else this.state }}',
+            payload_available: 'ON',
+        },
         cmps: {} as Record<string, Record<string, string>>,
         state_topic: `${this.mqtt.prefix}/${this.receiver.id}/${zoneId}/state`,
         command_topic: `${this.mqtt.prefix}/${this.receiver.id}/${zoneId}/command`,

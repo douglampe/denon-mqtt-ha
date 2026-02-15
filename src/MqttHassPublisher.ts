@@ -111,7 +111,7 @@ export class MqttHassPublisher {
         },
         availability: {
           topic: `${this.mqtt.prefix}/${this.receiver.id}/main_zone/${this.changeTopic}`,
-          value_template: '{{ value_json.state.main_power if value_json.state.main_power is defined else this.state }}',
+          value_template: '{{ value_json.state.main_power if value_json.state.main_power is not none else "unknown" }}',
           payload_available: 'ON',
         },
         cmps: {} as Record<string, Record<string, string>>,

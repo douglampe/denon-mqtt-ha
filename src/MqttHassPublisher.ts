@@ -9,6 +9,8 @@ export interface MqttConfig {
   username: string;
   password: string;
   prefix: string;
+  stateTopic: string;
+  changeTopic: string;
 }
 
 export interface HomeAssistantConfig {
@@ -43,12 +45,16 @@ export class MqttHassPublisher {
   private mqtt: MqttConfig;
   private hass: HomeAssistantConfig;
   private client: MqttClient;
+  private stateTopic: string;
+  private changeTopic: string;
 
   constructor(options: MqttManagerOptions) {
     this.receiver = options.receiver;
     this.mqtt = options.mqtt;
     this.hass = options.hass;
     this.client = options.client;
+    this.stateTopic = options.mqtt.stateTopic;
+    this.changeTopic = options.mqtt.changeTopic;
   }
 
   public static async start(receivers: ReceiverConfig[], mqtt: MqttConfig, hass: HomeAssistantConfig) {
@@ -104,12 +110,12 @@ export class MqttHassPublisher {
           name: 'denon-mqtt-ha',
         },
         availability: {
-          topic: `${this.mqtt.prefix}/${this.receiver.id}/main_zone/state`,
+          topic: `${this.mqtt.prefix}/${this.receiver.id}/main_zone/${this.changeTopic}`,
           value_template: '{{ value_json.state.main_power if value_json.state.main_power is defined else this.state }}',
           payload_available: 'ON',
         },
         cmps: {} as Record<string, Record<string, string>>,
-        state_topic: `${this.mqtt.prefix}/${this.receiver.id}/${zoneId}/state`,
+        state_topic: `${this.mqtt.prefix}/${this.receiver.id}/${zoneId}/${this.changeTopic}`,
         command_topic: `${this.mqtt.prefix}/${this.receiver.id}/${zoneId}/command`,
       };
 
@@ -147,9 +153,11 @@ export class MqttHassPublisher {
 
     if (type === 'fan') {
       config.entity['percentage_command_topic'] = `${this.mqtt.prefix}/${this.receiver.id}/${zoneId}/command`;
-      config.entity['percentage_state_topic'] = `${this.mqtt.prefix}/${this.receiver.id}/${zoneId}/state`;
+      config.entity['percentage_state_topic'] = `${this.mqtt.prefix}/${this.receiver.id}/${zoneId}/${this.changeTopic}`;
     } else if (type === 'select') {
       config.entity['options'] = this.receiver.zones[zone - 1].sources;
+    } else if (config.id === 'state') {
+      config.entity['json_attributes_topic'] = `${this.mqtt.prefix}/${this.receiver.id}/${zoneId}/${this.changeTopic}`;
     } else if (config.id === 'mute_toggle') {
       config.entity['command_template'] =
         `{ \"mute\": { \"text\": {% if is_state('switch.${this.receiver.id}_${zoneId}_mute', 'off') %}\"ON\"{% else %}\"OFF\"{% endif %} } }`;

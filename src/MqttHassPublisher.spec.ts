@@ -46,6 +46,8 @@ describe('MqttHassPublisher', () => {
           username: 'user',
           password: 'password',
           prefix: 'denon',
+          stateTopic: 'state',
+          changeTopic: 'change',
         },
         {
           prefix: 'homeassistant',
@@ -84,6 +86,8 @@ describe('MqttHassPublisher', () => {
           username: 'user',
           password: 'password',
           prefix: 'denon',
+          stateTopic: 'state',
+          changeTopic: 'change',
         },
         hass: {
           prefix: 'homeassistant',
@@ -108,8 +112,9 @@ describe('MqttHassPublisher', () => {
       expect(topics[0]).toEqual('homeassistant/device/avr_id_main_zone/config');
       expect(payloads[0].dev.ids).toEqual('avr_id_main_zone');
       expect(payloads[0].dev.name).toEqual('AVR Main');
-      expect(payloads[0]['state_topic']).toEqual('denon/avr_id/main_zone/state');
+      expect(payloads[0]['state_topic']).toEqual('denon/avr_id/main_zone/change');
       expect(payloads[0]['command_topic']).toEqual('denon/avr_id/main_zone/command');
+      expect(payloads[0].cmps['avr_id_main_zone_state']['json_attributes_topic']).toEqual('denon/avr_id/main_zone/change');
     });
   });
 
@@ -140,6 +145,8 @@ describe('MqttHassPublisher', () => {
           username: 'user',
           password: 'password',
           prefix: 'denon',
+          stateTopic: 'state',
+          changeTopic: 'change',
         },
         hass: {
           prefix: 'homeassistant',

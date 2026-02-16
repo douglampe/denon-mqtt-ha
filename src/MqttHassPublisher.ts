@@ -9,6 +9,7 @@ export interface MqttConfig {
   username: string;
   password: string;
   prefix: string;
+  availabilityTopic: string;
   stateTopic: string;
   changeTopic: string;
 }
@@ -45,6 +46,7 @@ export class MqttHassPublisher {
   private mqtt: MqttConfig;
   private hass: HomeAssistantConfig;
   private client: MqttClient;
+  private availabilityTopic: string;
   private stateTopic: string;
   private changeTopic: string;
 
@@ -53,6 +55,7 @@ export class MqttHassPublisher {
     this.mqtt = options.mqtt;
     this.hass = options.hass;
     this.client = options.client;
+    this.availabilityTopic = options.mqtt.availabilityTopic;
     this.stateTopic = options.mqtt.stateTopic;
     this.changeTopic = options.mqtt.changeTopic;
   }
@@ -101,6 +104,21 @@ export class MqttHassPublisher {
       const deviceName = `${this.receiver.name} ${zone.name}`;
       const compName = this.hass.shortNames ? zone.name : `${this.receiver.name} ${zone.name}`;
 
+      const topic = `${this.hass.prefix}/device/${deviceId}/config`;
+
+      // await this.publishToTopic(
+      //   topic,
+      //   {
+      //     dev: {
+      //       ids: deviceId,
+      //       name: deviceName,
+      //     },
+      //     o: {
+      //       name: 'denon-mqtt-ha',
+      //     },
+      //   },
+      // );
+
       const payload = {
         dev: {
           ids: deviceId,
@@ -110,9 +128,9 @@ export class MqttHassPublisher {
           name: 'denon-mqtt-ha',
         },
         availability: {
-          topic: `${this.mqtt.prefix}/${this.receiver.id}/main_zone/${this.changeTopic}`,
-          value_template: '{{ value_json.state.main_power if value_json.state.main_power is not none else "unknown" }}',
-          payload_available: 'ON',
+          topic: `${this.mqtt.prefix}/${this.receiver.id}/main_zone/${this.availabilityTopic}`,
+          value_template: '{{ value_json.available if value_json is not none and value_json.available is not none else false }}',
+          payload_available: true,
         },
         cmps: {} as Record<string, Record<string, string>>,
         state_topic: `${this.mqtt.prefix}/${this.receiver.id}/${zoneId}/${this.changeTopic}`,
@@ -135,16 +153,20 @@ export class MqttHassPublisher {
         this.addEntityConfig(payload.cmps, 'select', zoneIndex, entity, compName);
       }
 
-      const topic = `${this.hass.prefix}/device/${deviceId}/config`;
-
       console.debug(`Publishing discovery payload to topic ${topic} for device ${payload.dev.name}`);
 
-      await this.client.publishAsync(topic, JSON.stringify(payload));
+      await this.publishToTopic(topic, payload);
 
       console.debug(`Writing Media Player configuration for ${deviceName}`);
 
       await this.appendMediaPlayerConfig(compName, deviceId, zoneId);
     }
+  }
+
+  async publishToTopic(topic: string, payload: any) {
+    console.log(`[MQTT:${topic}]->${JSON.stringify(payload, null, 2)}`);
+
+    return this.client.publishAsync(topic, JSON.stringify(payload));
   }
 
   addEntityConfig(cmps: Record<string, Record<string, string>>, type: string, zone: number, config: EntityConfig, deviceName: string) {

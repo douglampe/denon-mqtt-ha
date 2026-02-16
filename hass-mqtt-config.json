@@ -5,7 +5,7 @@
       "id": "power",
       "entity": {
         "command_template": "{ \"power\": { \"text\": \"{{ value }}\" } }",
-        "value_template": "{{ value_json.state.power if value_json.state is not none and value_json.state.power is not none else 'unknown' }}"
+        "value_template": "{{ value_json.power if value_json.power is not none else 'unknown' }}"
       }
     },
     {
@@ -13,7 +13,7 @@
       "id": "mute",
       "entity": {
         "command_template": "{ \"mute\": { \"text\": \"{{ value }}\" } }",
-        "value_template": "{{ value_json.state.mute if value_json.state is not none and value_json.state.mute is not none else 'unknown' }}"
+        "value_template": "{{ value_json.mute if value_json.state.mute is not none else 'unknown' }}"
       }
     }
   ],
@@ -37,14 +37,14 @@
       "name": "Volume Percent",
       "id": "volume_percent",
       "entity": {
-        "value_template": "{{ (value_json.state.volume | float)*0.01 if value_json.state is not none and value_json.state.volume is not none else 'unknown' }}"
+        "value_template": "{{ (value_json.volume | float)*0.01 if value_json.volume is not none else 'unknown' }}"
       }
     },
     {
       "name": "State",
       "id": "state",
       "entity": {
-        "value_template": "{{ value_json.state.power if value_json.state is not none and value_json.state.power is not none else 'unknown' }}",
+        "value_template": "{{ value_json.power if value_json.power is not none else 'unknown' }}",
         "json_attributes_template": "{{ value_json.state if value_json.state is not none else 'unknown' }}"
       }
     }
@@ -56,8 +56,8 @@
       "entity": {
         "command_template": "{ \"volume\": { \"numeric\": \"{{ value }}\" } }",
         "percentage_command_template": "{ \"volume\": { \"numeric\": {{ value }} } }",
-        "percentage_value_template": "{{ value_json.state.volume if value_json.state is not none and value_json.state.volume is not none else 'unknown' }}",
-        "state_value_template": "{{ value_json.state.power if value_json.state is not none and value_json.state.power is not none else 'unknown' }}",
+        "percentage_value_template": "{{ value_json.volume if value_json.volume is not none else 'unknown' }}",
+        "state_value_template": "{{ value_json.power if value_json.power is not none else 'unknown' }}",
         "speed_range_min": "1",
         "speed_range_max": "99"
       }
@@ -69,7 +69,7 @@
       "id": "source",
       "entity": {
         "command_template": "{ \"source\": { \"text\": \"{{ value }}\" } }",
-        "value_template": "{{ value_json.state.source if value_json.state is not none and value_json.state.source is not none else 'unknown' }}"
+        "value_template": "{{ value_json.source if value_json.source is not none else 'unknown' }}"
       }
     }
   ]

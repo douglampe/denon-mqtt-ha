@@ -1,6 +1,6 @@
 {
   "name": "denon-mqtt-ha",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "MQTT Home Assistant configuration companion for denon-mqtt interface for Denon receivers",
   "main": "dist/entryPoint.js",
   "bin": {

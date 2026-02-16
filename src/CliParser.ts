@@ -32,6 +32,7 @@ export class CliParser {
       .option('--short-names', 'Use only zone names for entities')
       .option('-h --hass', 'Home Assistant discovery topic Prefix <hass>', process.env.DMQTT_HASS_PREFIX ?? 'homeassistant')
       .option('-o --output', 'Home Assistant Media Player config file <output>', process.env.DMQTT_HASS_OUTPUT ?? 'media_player.yaml')
+      .option('-l, --availability-topic <availabilityTopic>', 'MQTT availability topic', process.env.DMQTT_AVAILABILITY_TOPIC ?? 'availability')
       .option('-s, --state-topic <stateTopic>', 'MQTT state topic', process.env.DMQTT_STATE_TOPIC ?? 'state')
       .option('-c, --change-topic <changeTopic>', 'MQTT change topic', process.env.DMQTT_CHANGE_TOPIC ?? 'change')
       .action(CliParser.start);
@@ -71,6 +72,7 @@ export class CliParser {
         prefix: opts.prefix,
         stateTopic: opts.stateTopic,
         changeTopic: opts.changeTopic,
+        availabilityTopic: opts.availabilityTopic,
       },
       {
         prefix: opts.hass,

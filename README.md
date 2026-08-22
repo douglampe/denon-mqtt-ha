@@ -14,12 +14,13 @@ for media player devices leveraging the Home Assistant
 mkdir denon-mqtt
 cd denon-mqtt
 # Install globally
-yarn global add denon-mqtt # OR npm i -g denon-mqtt
-# Discover receiver configuration and write to receivers.json (EXPERIMENTAL):
-denon-mqtt -d -f receivers.json -a your.avr.ip.address
 yarn global add denon-mqtt-ha # OR npm i -g denon-mqtt-ha
 # Publish configuration
 denon-mqtt-ha
+# Install denon-mqtt globally
+yarn global add denon-mqtt # OR npm i -g denon-mqtt
+# Discover receiver configuration and write to receivers.json (EXPERIMENTAL):
+denon-mqtt -d -f receivers.json -a your.avr.ip.address
 ```
 
 Command-line options:
@@ -27,19 +28,21 @@ Command-line options:
 Usage: denon-mqt-ha [options]
 
 Options:
-  -i, --info                        Display current version number
-  -f, --file <file>                 Name of configuration JSON file (default: "receivers.json")
-  -m, --mqtt <url>                  MQTT URL (default: "192.168.1.131")
-  -u, --username <username>         MQTT username (default: "user")
-  -p, --password <password>         MQTT password (default: "password")
-  --port                            MQTT port <port>
-  --prefix                          MQTT topic prefix <prefix>
-  --short-names                     Use only zone names for entities
-  -h --hass                         Home Assistant discovery topic Prefix <hass>
-  -o --output                       Home Assistant Media Player config file <output>
-  -s, --state-topic <stateTopic>    MQTT state topic (default: "state")
-  -c, --change-topic <changeTopic>  MQTT change topic (default: "change")
-  --help                            display help for command
+  -i, --info                                    Display current version number
+  -f, --file <file>                             Name of configuration JSON file (default: "receivers.json")
+  -m, --mqtt <url>                              MQTT URL (default: "192.168.1.131")
+  -u, --username <username>                     MQTT username (default: "user")
+  -p, --password <password>                     MQTT password (default: "password")
+  --port                                        MQTT port <port>
+  --prefix                                      MQTT topic prefix <prefix>
+  --short-names                                 Use only zone names for entities
+  -h --hass                                     Home Assistant discovery topic Prefix <hass>
+  -o --output                                   Home Assistant Media Player config file <output>
+  -l, --availability-topic <availabilityTopic>  MQTT availability topic (default: "availability")
+  -s, --state-topic <stateTopic>                MQTT state topic (default: "state")
+  -c, --change-topic <changeTopic>              MQTT change topic (default: "change")
+  -w, --payload-file <payloadFile>              File to store payloads
+  --help                                        display help for command
 ```
 
 ## Devices

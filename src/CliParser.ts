@@ -35,6 +35,7 @@ export class CliParser {
       .option('-l, --availability-topic <availabilityTopic>', 'MQTT availability topic', process.env.DMQTT_AVAILABILITY_TOPIC ?? 'availability')
       .option('-s, --state-topic <stateTopic>', 'MQTT state topic', process.env.DMQTT_STATE_TOPIC ?? 'state')
       .option('-c, --change-topic <changeTopic>', 'MQTT change topic', process.env.DMQTT_CHANGE_TOPIC ?? 'change')
+      .option('-w, --payload-file <payloadFile>', 'File to store payloads', process.env.DMQTT_PAYLOAD_FILE)
       .action(CliParser.start);
 
     await program.parseAsync(options.args);
@@ -78,6 +79,7 @@ export class CliParser {
         prefix: opts.hass,
         configFile: opts.output,
         shortNames: opts.shortNames,
+        payloadFile: opts.payloadFile,
       },
     );
   }

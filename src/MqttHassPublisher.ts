@@ -18,6 +18,7 @@ export interface HomeAssistantConfig {
   prefix: string;
   configFile: string;
   shortNames: boolean;
+  payloadFile?: string;
 }
 
 export interface MqttManagerOptions {
@@ -49,6 +50,7 @@ export class MqttHassPublisher {
   private availabilityTopic: string;
   private stateTopic: string;
   private changeTopic: string;
+  public payloads: Array<{ topic: string, payload: string }> = [];
 
   constructor(options: MqttManagerOptions) {
     this.receiver = options.receiver;
@@ -86,6 +88,20 @@ export class MqttHassPublisher {
     await client.endAsync();
 
     console.debug('Disconnected from MQTT');
+
+    if (hass.payloadFile) {
+      console.debug(`Writing payloads to file ${hass.payloadFile}`);
+      
+      const payloads: Array<{ topic: string, payload: string }> = [];
+
+      for (const manager of managers) {
+        for (const payload of manager.payloads) {
+          payloads.push(payload);
+        }
+      }
+
+      await fs.writeFile(hass.payloadFile, JSON.stringify(payloads));
+    }
   }
 
   public static create(options: MqttManagerOptions) {
@@ -105,19 +121,6 @@ export class MqttHassPublisher {
       const compName = this.hass.shortNames ? zone.name : `${this.receiver.name} ${zone.name}`;
 
       const topic = `${this.hass.prefix}/device/${deviceId}/config`;
-
-      // await this.publishToTopic(
-      //   topic,
-      //   {
-      //     dev: {
-      //       ids: deviceId,
-      //       name: deviceName,
-      //     },
-      //     o: {
-      //       name: 'denon-mqtt-ha',
-      //     },
-      //   },
-      // );
 
       const payload = {
         dev: {
@@ -166,6 +169,10 @@ export class MqttHassPublisher {
   async publishToTopic(topic: string, payload: any) {
     console.log(`[MQTT:${topic}]->${JSON.stringify(payload, null, 2)}`);
 
+    if (this.hass.payloadFile) {
+      this.payloads.push({ topic, payload: JSON.stringify(payload) })
+    }
+
     return this.client.publishAsync(topic, JSON.stringify(payload));
   }
 
@@ -179,7 +186,7 @@ export class MqttHassPublisher {
     } else if (type === 'select') {
       config.entity['options'] = this.receiver.zones[zone - 1].sources;
     } else if (config.id === 'state') {
-      config.entity['json_attributes_topic'] = `${this.mqtt.prefix}/${this.receiver.id}/${zoneId}/${this.changeTopic}`;
+      config.entity['json_attributes_topic'] = `${this.mqtt.prefix}/${this.receiver.id}/${zoneId}/${this.stateTopic}`;
     } else if (config.id === 'mute_toggle') {
       config.entity['command_template'] =
         `{ \"mute\": { \"text\": {% if is_state('switch.${this.receiver.id}_${zoneId}_mute', 'off') %}\"ON\"{% else %}\"OFF\"{% endif %} } }`;

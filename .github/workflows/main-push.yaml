@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'main'
+      - '*'
 
 jobs:
   build-and-publish:
@@ -18,7 +19,5 @@ jobs:
       - name: Build
         run: yarn build
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '22.x'
-          registry-url: 'https://registry.npmjs.org'
+      - name: Test
+        run: yarn test

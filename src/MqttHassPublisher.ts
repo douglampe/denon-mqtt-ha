@@ -18,7 +18,7 @@ export interface HomeAssistantConfig {
   prefix: string;
   configFile: string;
   shortNames: boolean;
-  payloadFile: string;
+  payloadFile?: string;
 }
 
 export interface MqttManagerOptions {
@@ -50,7 +50,6 @@ export class MqttHassPublisher {
   private availabilityTopic: string;
   private stateTopic: string;
   private changeTopic: string;
-  private payloadFile: string;
   public payloads: Array<{ topic: string, payload: string }> = [];
 
   constructor(options: MqttManagerOptions) {
@@ -61,7 +60,6 @@ export class MqttHassPublisher {
     this.availabilityTopic = options.mqtt.availabilityTopic;
     this.stateTopic = options.mqtt.stateTopic;
     this.changeTopic = options.mqtt.changeTopic;
-    this.payloadFile = options.hass.payloadFile;
   }
 
   public static async start(receivers: ReceiverConfig[], mqtt: MqttConfig, hass: HomeAssistantConfig) {

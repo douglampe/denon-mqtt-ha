@@ -1,7 +1,8 @@
 import fs from 'fs/promises';
 import { MqttClient } from 'mqtt';
-import { ReceiverConfig } from './ReceiverConfig';
 import { connectAsync } from 'mqtt';
+
+import { ReceiverConfig } from './ReceiverConfig';
 
 export interface MqttConfig {
   host: string;
@@ -50,7 +51,7 @@ export class MqttHassPublisher {
   private availabilityTopic: string;
   private stateTopic: string;
   private changeTopic: string;
-  public payloads: Array<{ topic: string, payload: string }> = [];
+  public payloads: Array<{ topic: string; payload: string }> = [];
 
   constructor(options: MqttManagerOptions) {
     this.receiver = options.receiver;
@@ -91,8 +92,8 @@ export class MqttHassPublisher {
 
     if (hass.payloadFile) {
       console.debug(`Writing payloads to file ${hass.payloadFile}`);
-      
-      const payloads: Array<{ topic: string, payload: string }> = [];
+
+      const payloads: Array<{ topic: string; payload: string }> = [];
 
       for (const manager of managers) {
         for (const payload of manager.payloads) {
@@ -122,18 +123,15 @@ export class MqttHassPublisher {
 
       const topic = `${this.hass.prefix}/device/${deviceId}/config`;
 
-      await this.publishToTopic(
-        topic,
-        {
-          dev: {
-            ids: deviceId,
-            name: deviceName,
-          },
-          o: {
-            name: 'denon-mqtt-ha',
-          },
+      await this.publishToTopic(topic, {
+        dev: {
+          ids: deviceId,
+          name: deviceName,
         },
-      );
+        o: {
+          name: 'denon-mqtt-ha',
+        },
+      });
 
       const payload = {
         dev: {
@@ -183,7 +181,7 @@ export class MqttHassPublisher {
     console.log(`[MQTT:${topic}]->${JSON.stringify(payload, null, 2)}`);
 
     if (this.hass.payloadFile) {
-      this.payloads.push({ topic, payload: JSON.stringify(payload) })
+      this.payloads.push({ topic, payload: JSON.stringify(payload) });
     }
 
     return this.client.publishAsync(topic, JSON.stringify(payload));
@@ -217,7 +215,7 @@ export class MqttHassPublisher {
   }
 
   async appendMediaPlayerConfig(name: string, id: string, zone: string) {
-    fs.appendFile(
+    await fs.appendFile(
       this.hass.configFile,
       `  - platform: universal
     name: ${name} Audio

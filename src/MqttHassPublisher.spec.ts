@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
 import { connectAsync } from 'mqtt';
+
 import { MqttHassPublisher } from './MqttHassPublisher';
 
 jest.mock('mqtt', () => {
@@ -9,7 +10,9 @@ jest.mock('mqtt', () => {
 });
 
 describe('MqttHassPublisher', () => {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   (jest.spyOn(fs, 'writeFile') as any).mockImplementation(() => {});
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   (jest.spyOn(fs, 'appendFile') as any).mockImplementation(() => {});
   describe('start()', () => {
     it('should call publish for each receiver', async () => {
@@ -53,7 +56,7 @@ describe('MqttHassPublisher', () => {
         {
           prefix: 'homeassistant',
           configFile: 'media_player.yaml',
-          shortNames: false
+          shortNames: false,
         },
       );
       expect(mockPublish).toHaveBeenCalledTimes(2);
@@ -99,7 +102,7 @@ describe('MqttHassPublisher', () => {
         client,
       });
 
-      let payloads = [] as any[],
+      const payloads = [] as any[],
         topics = [] as string[];
 
       mockPublish.mockImplementation((t, p) => {

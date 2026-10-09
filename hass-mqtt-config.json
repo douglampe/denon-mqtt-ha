@@ -8,7 +8,7 @@
           "payload_on": "{ \"ss_speakers\": { \"key\": \"SWF\", \"value\": \"YES\" } }",
           "payload_off": "{ \"ss_speakers\": { \"key\": \"SWF\", \"value\": \"NON\" } }",
           "state_on": "{\"ss_speakers\":{\"key\":\"SWF\",\"value\":\"YES\"}}",
-          "state_off": "{\"ss_speakers\":{\"key\":\"SWF\",\"value\":\"NO\"}}"
+          "state_off": "{\"ss_speakers\":{\"key\":\"SWF\",\"value\":\"NON\"}}"
         }
       }
     ]

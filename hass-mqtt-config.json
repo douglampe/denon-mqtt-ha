@@ -30,7 +30,7 @@
         "value_template": "{{ value_json.mute if value_json.mute is not none else 'unknown' }}"
       }
     }
-],
+  ],
   "buttons": [
     {
       "name": "Mute Toggle",

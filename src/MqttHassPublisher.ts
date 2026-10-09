@@ -122,6 +122,19 @@ export class MqttHassPublisher {
 
       const topic = `${this.hass.prefix}/device/${deviceId}/config`;
 
+      await this.publishToTopic(
+        topic,
+        {
+          dev: {
+            ids: deviceId,
+            name: deviceName,
+          },
+          o: {
+            name: 'denon-mqtt-ha',
+          },
+        },
+      );
+
       const payload = {
         dev: {
           ids: deviceId,

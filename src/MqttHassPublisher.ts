@@ -36,6 +36,9 @@ export interface EntityConfig {
 }
 
 export interface EntitiesConfig {
+  main: {
+    switches: EntityConfig[];
+  };
   switches: EntityConfig[];
   buttons: EntityConfig[];
   sensors: EntityConfig[];
@@ -151,6 +154,7 @@ export class MqttHassPublisher {
         command_topic: `${this.mqtt.prefix}/${this.receiver.id}/${zoneId}/command`,
       };
 
+      const switches = zoneIndex === 1 ? [...entityConfig.switches, ...entityConfig.main.switches] : entityConfig.switches;
       for (const entity of entityConfig.switches) {
         this.addEntityConfig(payload.cmps, 'switch', zoneIndex, entity, compName);
       }

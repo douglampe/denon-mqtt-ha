@@ -1,4 +1,18 @@
 {
+  "main": {
+    "switches": [
+      {
+        "name": "Subwoofer",
+        "id": "sub",
+        "entity": {
+          "payload_on": "{ \"ss_speakers\": { \"key\": \"SWF\", \"value\": \"YES\" } }",
+          "payload_off": "{ \"ss_speakers\": { \"key\": \"SWF\", \"value\": \"NON\" } }",
+          "state_on": "{\"ss_speakers\":{\"key\":\"SWF\",\"value\":\"YES\"}}",
+          "state_off": "{\"ss_speakers\":{\"key\":\"SWF\",\"value\":\"NO\"}}"
+        }
+      }
+    ]
+  },
   "switches": [
     {
       "name": "Power",
@@ -14,16 +28,6 @@
       "entity": {
         "command_template": "{ \"mute\": { \"text\": \"{{ value }}\" } }",
         "value_template": "{{ value_json.mute if value_json.mute is not none else 'unknown' }}"
-      }
-    },
-    {
-      "name": "Subwoofer",
-      "id": "sub",
-      "entity": {
-        "payload_on": "{ \"ss_speakers\": { \"key\": \"SWF\", \"value\": \"YES\" } }",
-        "payload_off": "{ \"ss_speakers\": { \"key\": \"SWF\", \"value\": \"NON\" } }",
-        "state_on": "{\"ss_speakers\":{\"key\":\"SWF\",\"value\":\"YES\"}}",
-        "state_off": "{\"ss_speakers\":{\"key\":\"SWF\",\"value\":\"NO\"}}"
       }
     }
 ],

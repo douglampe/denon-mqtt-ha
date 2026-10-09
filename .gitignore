@@ -2,6 +2,7 @@ node_modules/
 dist/
 .env
 coverage/
+ha-config/
 media_player.yaml
 receivers.json
 receivers-discovered.json

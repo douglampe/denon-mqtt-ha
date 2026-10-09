@@ -1,8 +1,9 @@
 import { Command } from 'commander';
 import fs from 'fs/promises';
 import path from 'path';
-import { ReceiverConfig } from './ReceiverConfig';
+
 import { MqttHassPublisher } from './MqttHassPublisher';
+import { ReceiverConfig } from './ReceiverConfig';
 
 export class CliParser {
   public static isTest: boolean;
